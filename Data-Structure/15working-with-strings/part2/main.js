@@ -1,5 +1,15 @@
 "use strict";
 
+// toLowerCase();
+// toUpperCase();
+// slice();
+// trim();
+// replace();
+// includes();
+// startsWith();
+// endsWith();
+// includes();
+
 // const passanger = "sUrAJ";
 // const lowerPassanger = passanger.toLowerCase();
 // const upperPassanger = lowerPassanger[0].toUpperCase() + lowerPassanger.slice(1);
