@@ -5,7 +5,6 @@
 // slice();
 // trim();
 // replace();
-// includes();
 // startsWith();
 // endsWith();
 // includes();
