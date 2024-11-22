@@ -124,3 +124,17 @@ console.log(letters);
 // JOIN
 
 console.log(letters.join(" - "));
+
+// at method
+
+// at used for method chaining
+
+const numbers = [22, 11, 45];
+console.log(numbers.at(0));
+console.log(numbers.at(1));
+
+// retrive last element from array
+
+console.log(numbers[numbers.length - 1]);
+console.log(numbers.slice(-1)[0]);
+console.log(numbers.at(-1));

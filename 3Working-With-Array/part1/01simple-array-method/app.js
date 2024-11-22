@@ -41,3 +41,16 @@ console.log(letter);
 // join
 
 console.log(letter.join(" "));
+
+// at method
+
+// at methods used to method chaining
+
+const number = [22, 11, 45];
+console.log(number[number.length - 1]);
+console.log(number.slice(-1)[0]);
+console.log(number.at(-1));
+
+const userName = "Suraj";
+console.log(userName.at(1));
+console.log(userName.at(-1));
