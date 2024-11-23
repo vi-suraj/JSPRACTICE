@@ -102,7 +102,12 @@ const creatUserName = function (accs) {
   });
 };
 
-creatUserName(accounts);
+function balance(value) {
+  const currentBalance = value.reduce((acc, mov) => acc + mov, 0);
+  console.log(currentBalance);
+  labelBalance.textContent = `${currentBalance} EUR`;
+}
+
+balance(account2.movements);
 
 console.log(accounts);
-
