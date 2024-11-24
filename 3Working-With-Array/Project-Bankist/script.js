@@ -83,7 +83,7 @@ const displayMovements = function (movements) {
     const movementHtml = `
     <div class="movements__row">
       <div class="movements__type movements__type--${balanceStatus}">${i + 1} ${balanceStatus}</div>
-      <div class="movements__value">${mov}</div>
+      <div class="movements__value">${mov}€</div>
     </div>`;
 
     containerMovements.insertAdjacentHTML("afterbegin", movementHtml);
@@ -105,9 +105,25 @@ const creatUserName = function (accs) {
 function balance(value) {
   const currentBalance = value.reduce((acc, mov) => acc + mov, 0);
   console.log(currentBalance);
-  labelBalance.textContent = `${currentBalance} EUR`;
+  labelBalance.textContent = `${currentBalance}€`;
 }
 
-balance(account2.movements);
+balance(account1.movements);
 
-console.log(accounts);
+const calcDisplaySummary = function (movements) {
+  const income = movements.filter((mov) => mov > 0).reduce((acc, mov) => acc + mov, 0);
+  labelSumIn.textContent = `${income}€`;
+
+  const outcome = movements.filter((mov) => mov < 0).reduce((acc, mov) => acc + mov, 0);
+  labelSumOut.textContent = `${Math.abs(outcome)}€`;
+
+  const interest = movements
+    .filter((mov) => mov > 0)
+    .map((mov) => (mov * 1.2) / 100)
+    .filter((int) => int >= 1)
+    .reduce((acc, int) => acc + int, 0);
+
+  labelSumInterest.textContent = `${interest}€`;
+};
+
+calcDisplaySummary(account1.movements);
