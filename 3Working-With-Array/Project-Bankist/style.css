@@ -94,8 +94,14 @@ nav {
   gap: 2rem;
 
   /* NOTE This creates the fade in/out anumation */
-  /* opacity: 0; */
+  visibility: hidden;
+  opacity: 0;
   transition: all 1s;
+}
+
+.app.active {
+  visibility: visible;
+  opacity: 1;
 }
 
 .balance {
@@ -295,4 +301,3 @@ h2 {
 .timer {
   font-weight: 600;
 }
-

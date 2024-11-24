@@ -90,8 +90,6 @@ const displayMovements = function (movements) {
   });
 };
 
-displayMovements(account1.movements);
-
 const creatUserName = function (accs) {
   accs.forEach((acc) => {
     acc.userName = acc.owner
@@ -102,28 +100,52 @@ const creatUserName = function (accs) {
   });
 };
 
+creatUserName(accounts);
+
 function balance(value) {
   const currentBalance = value.reduce((acc, mov) => acc + mov, 0);
-  console.log(currentBalance);
   labelBalance.textContent = `${currentBalance}€`;
 }
 
-balance(account1.movements);
-
-const calcDisplaySummary = function (movements) {
-  const income = movements.filter((mov) => mov > 0).reduce((acc, mov) => acc + mov, 0);
+const calcDisplaySummary = function (accounts) {
+  const income = accounts.movements.filter((mov) => mov > 0).reduce((acc, mov) => acc + mov, 0);
   labelSumIn.textContent = `${income}€`;
 
-  const outcome = movements.filter((mov) => mov < 0).reduce((acc, mov) => acc + mov, 0);
+  const outcome = accounts.movements.filter((mov) => mov < 0).reduce((acc, mov) => acc + mov, 0);
   labelSumOut.textContent = `${Math.abs(outcome)}€`;
 
-  const interest = movements
+  const interest = accounts.movements
     .filter((mov) => mov > 0)
-    .map((mov) => (mov * 1.2) / 100)
+    .map((mov) => (mov * accounts.interestRate) / 100)
     .filter((int) => int >= 1)
     .reduce((acc, int) => acc + int, 0);
 
   labelSumInterest.textContent = `${interest}€`;
 };
 
-calcDisplaySummary(account1.movements);
+// current account
+
+let currentAccount;
+
+btnLogin.addEventListener("click", function (e) {
+  e.preventDefault();
+
+  currentAccount = accounts.find((user) => user.userName === inputLoginUsername.value);
+  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+    // display ui and message
+    labelWelcome.textContent = `Welcome Back ${currentAccount.owner.split(" ")[0]}`;
+    containerApp.classList.add("active");
+
+    // display movement
+    displayMovements(currentAccount.movements);
+
+    // display balance
+    balance(currentAccount.movements);
+
+    // display summery
+    calcDisplaySummary(currentAccount);
+
+    inputLoginUsername.value = inputLoginPin.value = "";
+    inputLoginPin.blur();
+  }
+});
