@@ -170,3 +170,28 @@ btnTransfer.addEventListener("click", function (e) {
   }
   inputTransferAmount.value = inputTransferTo.value = "";
 });
+
+btnLoan.addEventListener("click", function (e) {
+  e.preventDefault();
+
+  const amount = Number(inputLoanAmount.value);
+
+  if (amount > 0 && currentAccount.movements.some((mov) => mov >= amount * 0.1)) {
+    currentAccount.movements.push(Number(inputLoanAmount.value));
+    inputLoanAmount.value = "";
+    updateUI(currentAccount);
+  } else {
+    alert("The Loan Amount Is More Than Your Current Balance");
+  }
+});
+
+btnClose.addEventListener("click", function (e) {
+  e.preventDefault();
+  if (currentAccount.userName === inputCloseUsername.value && currentAccount.pin === Number(inputClosePin.value)) {
+    const index = accounts.findIndex((user) => user.userName === currentAccount.userName);
+    console.log(index);
+    accounts.splice(index, 1);
+    containerApp.classList.remove("active");
+    inputCloseUsername.value = inputClosePin.value = "";
+  }
+});
