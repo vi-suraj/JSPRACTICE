@@ -75,9 +75,12 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
 
-const displayMovements = function (movements) {
+const displayMovements = function (movements, sort = false) {
   containerMovements.innerHTML = "";
-  movements.forEach(function (mov, i) {
+
+  const move = sort ? movements.slice().sort((a, b) => a - b) : movements;
+
+  move.forEach(function (mov, i) {
     const balanceStatus = mov > 0 ? "deposit" : "withdrawal";
 
     const movementHtml = `
@@ -195,3 +198,29 @@ btnClose.addEventListener("click", function (e) {
     inputCloseUsername.value = inputClosePin.value = "";
   }
 });
+
+let sorted = false;
+
+btnSort.addEventListener("click", function (e) {
+  e.preventDefault();
+  displayMovements(currentAccount.movements, !sorted);
+  sorted = !sorted;
+});
+
+// const accountMovements = accounts.map((acc) => acc.movements);
+// const allMovements = accountMovements.flat();
+// console.log(allMovements);
+// const sumAllMovements = allMovements.reduce((acc, mov) => acc + mov, 0);
+// console.log(sumAllMovements);
+
+const overallBalance = accounts
+  .map((acc) => acc.movements)
+  .flat()
+  .reduce((acc, mov) => acc + mov, 0);
+
+console.log(overallBalance);
+
+// flatmap flat map methods does first map and the flat it require callback function and its only goes one level deep
+
+const overallBalance1 = accounts.flatMap((acc) => acc.movements).reduce((acc, mov) => acc + mov, 0);
+console.log(overallBalance1);
