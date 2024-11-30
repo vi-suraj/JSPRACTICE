@@ -10,6 +10,9 @@ const account1 = {
   movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
   interestRate: 1.2, // %
   pin: 1111,
+  movementsDates: ["2019-11-18T21:31:17.178Z", "2019-12-23T07:42:02.383Z", "2020-01-28T09:15:04.904Z", "2020-04-01T10:17:24.185Z", "2020-05-08T14:11:59.604Z", "2020-05-27T17:01:17.194Z", "2020-07-11T23:36:17.929Z", "2020-07-12T10:51:36.790Z"],
+  currency: "EUR",
+  locale: "pt-PT", // de-DE
 };
 
 const account2 = {
@@ -17,6 +20,9 @@ const account2 = {
   movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
   interestRate: 1.5,
   pin: 2222,
+  movementsDates: ["2019-11-01T13:15:33.035Z", "2019-11-30T09:48:16.867Z", "2019-12-25T06:04:23.907Z", "2020-01-25T14:18:46.235Z", "2020-02-05T16:33:06.386Z", "2020-04-10T14:43:26.374Z", "2020-06-25T18:49:59.371Z", "2020-07-26T12:01:20.894Z"],
+  currency: "USD",
+  locale: "en-US",
 };
 
 const account3 = {
@@ -75,21 +81,33 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
 
-const displayMovements = function (movements, sort = false) {
+const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = "";
 
-  const move = sort ? movements.slice().sort((a, b) => a - b) : movements;
+  const move = sort ? acc.movements.slice().sort((a, b) => a - b) : acc.movements;
 
   move.forEach(function (mov, i) {
     const balanceStatus = mov > 0 ? "deposit" : "withdrawal";
 
+    const dates = new Date(acc.movementsDates[i]);
+    const date = `${dates.getDate()}`.padStart(2, 0);
+    const month = `${dates.getMonth() + 1}`.padStart(2, 0);
+    const year = dates.getFullYear();
+    const hour = now.getHours();
+    const minutes = now.getMinutes();
+    const displayDate = `${date}/${month}/${year}`;
+
     const movementHtml = `
     <div class="movements__row">
       <div class="movements__type movements__type--${balanceStatus}">${i + 1} ${balanceStatus}</div>
+      <div class="movements__date">${displayDate}</div>
       <div class="movements__value">${mov}€</div>
     </div>`;
 
     containerMovements.insertAdjacentHTML("afterbegin", movementHtml);
+
+    const currentDate = `${date}/${month}/${year}, ${hour}:${minutes}`;
+    labelDate.textContent = currentDate;
   });
 };
 
@@ -133,7 +151,7 @@ const calcDisplaySummary = function (accounts) {
 
 const updateUI = function (acc) {
   // display movement
-  displayMovements(acc.movements);
+  displayMovements(acc);
 
   // display balance
   balance(acc);
@@ -168,11 +186,14 @@ btnTransfer.addEventListener("click", function (e) {
   if (transferAmount > 0 && reciverAccount && currentAccount.balance >= transferAmount && reciverAccount?.userName !== currentAccount.userName) {
     currentAccount.movements.push(-transferAmount);
     reciverAccount.movements.push(transferAmount);
+    currentAccount.movementsDates.push(now.toISOString());
+    reciverAccount.movementsDates.push(now.toISOString());
     updateUI(currentAccount);
-    updateUI(reciverAccount);
   }
   inputTransferAmount.value = inputTransferTo.value = "";
 });
+
+const now = new Date();
 
 btnLoan.addEventListener("click", function (e) {
   e.preventDefault();
@@ -181,6 +202,7 @@ btnLoan.addEventListener("click", function (e) {
 
   if (amount > 0 && currentAccount.movements.some((mov) => mov >= amount * 0.1)) {
     currentAccount.movements.push(Number(inputLoanAmount.value));
+    currentAccount.movementsDates.push(now.toISOString());
     inputLoanAmount.value = "";
     updateUI(currentAccount);
   } else {
@@ -203,24 +225,6 @@ let sorted = false;
 
 btnSort.addEventListener("click", function (e) {
   e.preventDefault();
-  displayMovements(currentAccount.movements, !sorted);
+  displayMovements(currentAccount, !sorted);
   sorted = !sorted;
 });
-
-// const accountMovements = accounts.map((acc) => acc.movements);
-// const allMovements = accountMovements.flat();
-// console.log(allMovements);
-// const sumAllMovements = allMovements.reduce((acc, mov) => acc + mov, 0);
-// console.log(sumAllMovements);
-
-const overallBalance = accounts
-  .map((acc) => acc.movements)
-  .flat()
-  .reduce((acc, mov) => acc + mov, 0);
-
-console.log(overallBalance);
-
-// flatmap flat map methods does first map and the flat it require callback function and its only goes one level deep
-
-const overallBalance1 = accounts.flatMap((acc) => acc.movements).reduce((acc, mov) => acc + mov, 0);
-console.log(overallBalance1);
