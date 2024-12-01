@@ -10,7 +10,7 @@ const account1 = {
   movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
   interestRate: 1.2, // %
   pin: 1111,
-  movementsDates: ["2019-11-18T21:31:17.178Z", "2019-12-23T07:42:02.383Z", "2020-01-28T09:15:04.904Z", "2020-04-01T10:17:24.185Z", "2020-05-08T14:11:59.604Z", "2020-05-27T17:01:17.194Z", "2020-07-11T23:36:17.929Z", "2020-07-12T10:51:36.790Z"],
+  movementsDates: ["2019-11-18T21:31:17.178Z", "2019-12-23T07:42:02.383Z", "2020-01-28T09:15:04.904Z", "2020-04-01T10:17:24.185Z", "2020-05-08T14:11:59.604Z", "2020-05-27T17:01:17.194Z", "2024-11-27T23:36:17.929Z", "2024-11-30T10:51:36.790Z"],
   currency: "EUR",
   locale: "pt-PT", // de-DE
 };
@@ -81,6 +81,29 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
 
+// format movement dates
+
+const formateMovementsDate = function (day) {
+  const calcPassedDays = (date1, date2) => Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
+
+  const dayPassed = calcPassedDays(new Date(), day);
+
+  if (dayPassed === 0) {
+    return "today";
+  } else if (dayPassed === 1) {
+    return "yesterday";
+  } else if (dayPassed <= 7) {
+    return `${dayPassed} days`;
+  } else {
+    const date = `${day.getDate()}`.padStart(2, 0);
+    const month = `${day.getMonth() + 1}`.padStart(2, 0);
+    const year = day.getFullYear();
+    const hour = now.getHours();
+    const minutes = now.getMinutes();
+    return `${date}/${month}/${year}`;
+  }
+};
+
 const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = "";
 
@@ -90,12 +113,7 @@ const displayMovements = function (acc, sort = false) {
     const balanceStatus = mov > 0 ? "deposit" : "withdrawal";
 
     const dates = new Date(acc.movementsDates[i]);
-    const date = `${dates.getDate()}`.padStart(2, 0);
-    const month = `${dates.getMonth() + 1}`.padStart(2, 0);
-    const year = dates.getFullYear();
-    const hour = now.getHours();
-    const minutes = now.getMinutes();
-    const displayDate = `${date}/${month}/${year}`;
+    const displayDate = formateMovementsDate(dates);
 
     const movementHtml = `
     <div class="movements__row">
@@ -105,9 +123,6 @@ const displayMovements = function (acc, sort = false) {
     </div>`;
 
     containerMovements.insertAdjacentHTML("afterbegin", movementHtml);
-
-    const currentDate = `${date}/${month}/${year}, ${hour}:${minutes}`;
-    labelDate.textContent = currentDate;
   });
 };
 
@@ -201,12 +216,16 @@ btnLoan.addEventListener("click", function (e) {
   const amount = Number(inputLoanAmount.value);
 
   if (amount > 0 && currentAccount.movements.some((mov) => mov >= amount * 0.1)) {
-    currentAccount.movements.push(Number(inputLoanAmount.value));
-    currentAccount.movementsDates.push(now.toISOString());
-    inputLoanAmount.value = "";
-    updateUI(currentAccount);
+    setTimeout(() => {
+      currentAccount.movements.push(Number(inputLoanAmount.value));
+      currentAccount.movementsDates.push(now.toISOString());
+      inputLoanAmount.value = "";
+      updateUI(currentAccount);
+    }, 3000);
   } else {
-    alert("The Loan Amount Is More Than Your Current Balance");
+    setTimeout(() => {
+      alert("The Loan Amount Is More Than Your Current Balance");
+    }, 3000);
   }
 });
 
