@@ -104,6 +104,27 @@ const formateMovementsDate = function (day) {
   }
 };
 
+const logoutTimer = function () {
+  let time = 120;
+
+  const tick = () => {
+    const min = String(Math.trunc(time / 60)).padStart(2, 0);
+    const sec = String(time % 60).padStart(2, 0);
+
+    labelTimer.textContent = `${min}:${sec}`;
+
+    if (time === 0) {
+      clearInterval(timer);
+      containerApp.classList.remove("active");
+    }
+
+    time--;
+  };
+  tick();
+  const timer = setInterval(tick, 1000);
+  return timer;
+};
+
 const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = "";
 
@@ -175,7 +196,8 @@ const updateUI = function (acc) {
   calcDisplaySummary(acc);
 };
 
-let currentAccount;
+let currentAccount, timer;
+console.log(timer);
 
 btnLogin.addEventListener("click", function (e) {
   e.preventDefault();
@@ -190,6 +212,8 @@ btnLogin.addEventListener("click", function (e) {
     inputLoginPin.blur();
 
     updateUI(currentAccount);
+    if (timer) clearInterval(timer);
+    timer = logoutTimer();
   }
 });
 
