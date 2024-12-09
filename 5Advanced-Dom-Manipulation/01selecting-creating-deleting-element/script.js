@@ -137,3 +137,51 @@ scrollBtn.addEventListener('click', function (e) {
     document.documentElement.clientWidth
   );
 });
+
+// // Event Propagation
+
+// const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1) + 1);
+// console.log(randomInt(1, 20));
+
+// const randomColor = () =>
+//   `rgb(${randomInt(1, 255)},${randomInt(1, 255)},${randomInt(1, 255)})`;
+
+// document.querySelector('.nav__link').addEventListener('click', function (e) {
+//   this.style.background = randomColor();
+//   console.log(e.target, e.currentTarget);
+//   e.stopPropagation();
+// });
+// document.querySelector('.nav__links').addEventListener('click', function (e) {
+//   this.style.background = randomColor();
+//   console.log(e.target, e.currentTarget);
+// });
+// document.querySelector('.nav').addEventListener('click', function (e) {
+//   this.style.background = randomColor();
+//   console.log(e.target, e.currentTarget);
+// });
+
+// page navigation
+
+// event delegation
+
+// const navLinks = document.querySelectorAll('.nav__link');
+// navLinks.forEach(el =>
+//   el.addEventListener('click', function (e) {
+//     e.preventDefault();
+//     const id = this.getAttribute('href');
+//     document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+//   })
+// );
+
+// event deligation
+
+//1. add event listner to common parent element
+//2. determine what element originated the event
+
+document.querySelector('.nav__links').addEventListener('click', function (e) {
+  e.preventDefault();
+  if (e.target.classList.contains('nav__link')) {
+    const id = e.target.getAttribute('href');
+    document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+  }
+});
