@@ -235,3 +235,45 @@ tabContainer.addEventListener('click', function (e) {
     .querySelector(`.operations__content--${clicked.dataset.tab}`)
     .classList.add('operations__content--active');
 });
+
+// menu fade animation
+
+// function fadeNav(e, fade) {
+//   if (e.target.classList.contains('nav__link')) {
+//     const link = e.target;
+//     const siblind = link.closest('.nav').querySelectorAll('.nav__link');
+//     const logo = link.closest('.nav').querySelector('img');
+
+//     siblind.forEach(el => {
+//       if (el != link) el.style.opacity = fade;
+//     });
+//     logo.style.opacity = fade;
+//   }
+// }
+
+// const nav = document.querySelector('.nav');
+// nav.addEventListener('mouseover', function (e) {
+//   fadeNav(e, 0.5);
+// });
+
+// nav.addEventListener('mouseout', function (e) {
+//   fadeNav(e, 1);
+// });
+
+function fadeNav(e) {
+  if (e.target.classList.contains('nav__link')) {
+    const link = e.target;
+    const siblind = link.closest('.nav').querySelectorAll('.nav__link');
+    const logo = link.closest('.nav').querySelector('img');
+
+    siblind.forEach(el => {
+      if (el != link) el.style.opacity = this;
+    });
+    logo.style.opacity = this;
+  }
+}
+
+const nav = document.querySelector('.nav');
+nav.addEventListener('mouseover', fadeNav.bind(0.5));
+
+nav.addEventListener('mouseout', fadeNav.bind(1));
