@@ -6,6 +6,9 @@
 // if the first value is the truthly value it will immedietly return that first value
 // to set default value
 
+// *** in or operator at least 1 operand is true it will return that true value
+// if all value are falsy then the last value get returned
+
 // AND
 // and operator short circuit when the first value is falsy
 // used to execute second operand if the first one is true
