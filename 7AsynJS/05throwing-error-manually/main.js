@@ -1,7 +1,7 @@
 "use strict";
 
 const countriesContainer = document.querySelector(".countries");
-const button = document.querySelector(".btn-country");
+const btn = document.querySelector(".btn-country");
 
 const renderCountryData = function (data, className = "") {
   // Handle undefined languages and currencies safely
@@ -21,38 +21,41 @@ const renderCountryData = function (data, className = "") {
          </article>
      `;
   countriesContainer.insertAdjacentHTML("beforeend", html);
-  // countriesContainer.style.opacity = 1;
+  //   countriesContainer.style.opacity = 1;
 };
 
 const renderError = function (msg) {
   countriesContainer.insertAdjacentText("beforeend", msg);
-  // countriesContainer.style.opacity = 1;
+  //   countriesContainer.style.opacity = 1;
+};
+
+const getJSON = function (url, errorMsg = "Something Went Wrong") {
+  return fetch(url).then((response) => {
+    if (!response.ok) {
+      throw new Error(`${errorMsg} ${response.status}`);
+    }
+
+    return response.json();
+  });
 };
 
 // using promises
 
 const getCountryData = function (country) {
-  fetch(`https://restcountries.com/v3.1/name/${country}`)
-    .then((response) => response.json())
+  getJSON(`https://restcountries.com/v3.1/name/${country}`, "Country Not Found")
     .then((data) => {
       renderCountryData(data[0]);
-      const neighbour = data[0].borders[0];
-
-      if (!neighbour) return;
-
-      return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+      const neighbour = data[0].borders ? data[0].borders[0] : null;
+      if (!neighbour) throw new Error("No Neighbour Found");
+      return getJSON(`https://restcountries.com/v3.1/alpha/${neighbour}`, "Country Not Found");
     })
-    .then((response) => response.json())
     .then((data) => renderCountryData(data[0], "neighbour"))
     .catch((err) => {
-      console.error(`${err} 💥💥`);
-      renderError(`Something Went Wrong 💥💥💥 ${err.message}.Try Again`);
+      renderError(`Something went wrong ${err}. Try Again`);
     })
     .finally(() => (countriesContainer.style.opacity = 1));
 };
 
-button.addEventListener("click", function () {
-  getCountryData("india");
+btn.addEventListener("click", function () {
+  getCountryData("japan");
 });
-
-// getCountryData("adadadw");
